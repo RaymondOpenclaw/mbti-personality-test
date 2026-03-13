@@ -9,6 +9,7 @@ const navItems = [
   { href: '/', label: '首页' },
   { href: '/test', label: '开始测试' },
   { href: '/types', label: '16型人格' },
+  { href: '/enterprise', label: '企业版' },
   { href: '/about', label: '关于我们' },
 ];
 
