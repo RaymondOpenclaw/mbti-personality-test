@@ -2,8 +2,39 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Users, Lightbulb, Shield, Compass } from 'lucide-react';
 import { getMBTITypes } from '@/data/mbtiTypes';
+
+const groupInfo = {
+  analyst: {
+    name: '分析家',
+    icon: Lightbulb,
+    color: '#8B5CF6',
+    bgColor: '#EDE9FE',
+    description: '理性与直觉的完美结合'
+  },
+  diplomat: {
+    name: '外交家',
+    icon: Users,
+    color: '#10B981',
+    bgColor: '#D1FAE5',
+    description: '同理心与理想的追求者'
+  },
+  sentinel: {
+    name: '守护者',
+    icon: Shield,
+    color: '#3B82F6',
+    bgColor: '#DBEAFE',
+    description: '秩序与责任的坚定维护者'
+  },
+  explorer: {
+    name: '探险家',
+    icon: Compass,
+    color: '#F59E0B',
+    bgColor: '#FEF3C7',
+    description: '自由与行动的实践者'
+  }
+};
 
 export function TypeShowcase() {
   const types = getMBTITypes();
@@ -32,47 +63,81 @@ export function TypeShowcase() {
           </motion.p>
         </div>
 
-        {/* Type Grid */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8 lg:gap-3">
-          {types.map((type, index) => (
+        {/* Group Sections */}
+        {Object.entries(groupInfo).map(([groupKey, group], groupIndex) => {
+          const groupTypes = types.filter(t => t.group === groupKey);
+          const Icon = group.icon;
+
+          return (
             <motion.div
-              key={type.code}
+              key={groupKey}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
+              transition={{ delay: groupIndex * 0.1 }}
+              className="mb-8"
             >
-              <Link
-                href={`/types/${type.code}`}
-                className="group relative flex flex-col items-center rounded-2xl bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+              {/* Group Header */}
+              <div
+                className="flex items-center gap-3 mb-4 p-4 rounded-2xl"
+                style={{ backgroundColor: group.bgColor }}
               >
-                {/* Color indicator */}
                 <div
-                  className="absolute inset-x-0 top-0 h-1 rounded-t-2xl opacity-80 transition-opacity group-hover:opacity-100"
-                  style={{ backgroundColor: type.color }}
-                />
-
-                {/* Type Code */}
-                <div
-                  className="mb-2 flex h-14 w-14 items-center justify-center rounded-xl text-lg font-bold text-white shadow-md"
-                  style={{ backgroundColor: type.color }}
+                  className="flex h-12 w-12 items-center justify-center rounded-xl"
+                  style={{ backgroundColor: group.color }}
                 >
-                  {type.code}
+                  <Icon className="h-6 w-6 text-white" />
                 </div>
+                <div>
+                  <h3 className="text-xl font-bold" style={{ color: group.color }}>
+                    {group.name}
+                  </h3>
+                  <p className="text-sm text-gray-600">{group.description}</p>
+                </div>
+              </div>
 
-                {/* Name */}
-                <h3 className="text-center text-sm font-semibold text-gray-900">
-                  {type.nickname}
-                </h3>
+              {/* Type Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {groupTypes.map((type, index) => (
+                  <motion.div
+                    key={type.code}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <Link
+                      href={`/types/${type.code}`}
+                      className="group relative flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg border-2 border-transparent hover:border-current"
+                      style={{ '--tw-border-opacity': 0.2, color: type.colorTheme.primary }}
+                    >
+                      {/* Emoji */}
+                      <div
+                        className="flex h-12 w-12 items-center justify-center rounded-xl text-2xl shadow-sm"
+                        style={{ backgroundColor: type.colorTheme.light }}
+                      >
+                        {type.emoji}
+                      </div>
 
-                {/* Chinese Name */}
-                <p className="mt-1 text-center text-xs text-gray-500">
-                  {type.name}
-                </p>
-              </Link>
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div
+                          className="text-lg font-bold"
+                          style={{ color: type.colorTheme.primary }}
+                        >
+                          {type.code}
+                        </div>
+                        <div className="text-sm text-gray-600 truncate">
+                          {type.nickname}
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
-          ))}
-        </div>
+          );
+        })}
 
         {/* View All Button */}
         <motion.div

@@ -51,15 +51,30 @@ export interface MBTIResult {
   growth: string[];
 }
 
+export interface ColorTheme {
+  primary: string;
+  secondary: string;
+  light: string;
+  dark: string;
+  gradient: string;
+}
+
 export interface PersonalityType {
   code: MBTIType;
   name: string;
   nickname: string;
+  emoji: string;
   description: string;
   image: string;
   color: string;
+  colorTheme: ColorTheme;
+  group: 'analyst' | 'diplomat' | 'sentinel' | 'explorer';
+  groupName: string;
   functions: string[];
   famous: string[];
+  traits: string[];
+  careers: string[];
+  growthAreas: string[];
 }
 
 export interface Report {
